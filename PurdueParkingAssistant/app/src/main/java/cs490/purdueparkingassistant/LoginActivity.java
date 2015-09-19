@@ -1,9 +1,11 @@
 package cs490.purdueparkingassistant;
 
-import android.support.v7.app.AppCompatActivity;
+
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.EditText;
 
 public class LoginActivity extends AppCompatActivity {
 
@@ -11,6 +13,9 @@ public class LoginActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
+
+        EditText emailField = (EditText) findViewById(R.id.emailField);
+
     }
 
     @Override
