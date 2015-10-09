@@ -3,4 +3,28 @@
 
     <string name="hello_world">Hello world!</string>
     <string name="action_settings">Settings</string>
+    <string name="title_activity_main_page">MainPage</string>
+
+    <string name="title_section1">Section 1</string>
+    <string name="title_section2">Section 2</string>
+    <string name="title_section3">Section 3</string>
+
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
+
+    <string name="action_example">Example action</string>
+    <string name="title_activity_test">Test</string>
+    <string name="title_activity_navigation">NavigationActivity</string>
+    <string name="title_activity_fuck_u">FuckU</string>
+    <string name="title_activity_some_fucking_thing">SomeFuckingThing</string>
+    <string name="title_activity_nav">NavActivity</string>
+    <string name="title_activity_main_navigation">MainNavigation</string>
+
+    <string name="drawer_open">Open</string>
+    <string name="drawer_close">Close</string>
+
+<!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="title_activity_settings">SettingsActivity</string>
+    <string name="title_activity_add_vehicle">AddVehicle</string>
 </resources>

@@ -1,0 +1,37 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="cs490.purdueparkingassistant.TicketPage"
+    android:background="#7CA6C0">
+
+    <!-- TODO: Update blank fragment layout -->
+
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="243dp"
+        android:layout_gravity="center_horizontal|top"
+        android:id="@+id/linearLayout"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentTop="true">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:text="Tickets"
+            android:id="@+id/textView6"
+            android:background="#4A6373"
+            android:textColor="#ffffff" />
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@android:color/black"/>
+
+        <ListView
+            android:layout_width="match_parent"
+            android:layout_height="485dp"
+            android:id="@+id/ticketList" />
+    </LinearLayout>
+
+</RelativeLayout>

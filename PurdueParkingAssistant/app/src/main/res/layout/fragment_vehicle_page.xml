@@ -1,0 +1,68 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
+    android:orientation="vertical"
+    android:layout_height="match_parent" tools:context="cs490.purdueparkingassistant.VehiclePage"
+    android:background="#7CA6C0"
+    android:weightSum="1"
+    android:id="@+id/vehicleParentView">
+
+    <RelativeLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/vehicleListLayout"
+        android:orientation="vertical"
+        android:layout_above="@+id/vehicleButtonLayout">
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:text="My Vehicles"
+        android:id="@+id/textView7"
+        android:textColor="#ffffff"
+        android:background="#4A6373" />
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_below="@id/textView7"
+            android:background="@android:color/black"/>
+
+    <ListView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@id/textView7"
+        android:id="@+id/vehicleList"
+        android:layout_gravity="bottom" />
+    </RelativeLayout>
+
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_gravity="bottom"
+        android:id="@+id/vehicleButtonLayout"
+        android:weightSum="1">
+            <Button
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_margin="10dp"
+                android:text="Add Vehicle"
+                android:layout_weight=".5"
+                android:background="#4A6373"
+                android:textColor="#ffffff"
+                android:id="@+id/addVehicle" />
+            <Button
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_margin="10dp"
+                android:layout_weight=".5"
+                android:text="Delete Vehicle"
+                android:background="#4A6373"
+                android:textColor="#ffffff"
+                android:id="@+id/deleteVehicle" />
+
+
+    </LinearLayout>
+
+</RelativeLayout>

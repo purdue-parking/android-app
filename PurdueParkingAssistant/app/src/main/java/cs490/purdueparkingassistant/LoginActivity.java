@@ -1,11 +1,19 @@
 package cs490.purdueparkingassistant;
 
 
+import android.content.Intent;
 import android.os.Bundle;
+import android.support.v7.app.ActionBarActivity;
 import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.Button;
 import android.widget.EditText;
+import android.widget.TextView;
+import com.loopj.android.http.*;
+
+import cz.msebera.android.httpclient.Header;
 
 public class LoginActivity extends AppCompatActivity {
 
@@ -15,6 +23,23 @@ public class LoginActivity extends AppCompatActivity {
         setContentView(R.layout.activity_login);
 
         EditText emailField = (EditText) findViewById(R.id.emailField);
+        TextView createButton = (TextView) findViewById(R.id.createAccount);
+        createButton.setOnClickListener(new LoginPageClickListener(1));
+        Button loginButton = (Button) findViewById(R.id.loginButton);
+        loginButton.setOnClickListener(new LoginPageClickListener(0));
+        getSupportActionBar().hide();
+        AsyncHttpClient client = new AsyncHttpClient();
+        client.get("https://www.google.com", new AsyncHttpResponseHandler() {
+            @Override
+            public void onSuccess(int statusCode, Header[] headers, byte[] responseBody) {
+                
+            }
+
+            @Override
+            public void onFailure(int statusCode, Header[] headers, byte[] responseBody, Throwable error) {
+
+            }
+        })
 
     }
 
@@ -39,4 +64,29 @@ public class LoginActivity extends AppCompatActivity {
 
         return super.onOptionsItemSelected(item);
     }
+
+    class LoginPageClickListener implements View.OnClickListener {
+
+        private static final int LOGINID = 0;
+        private static final int CREATEID = 1;
+        private int id;
+
+        public LoginPageClickListener(int id) {
+            this.id = id;
+        }
+
+        @Override
+        public void onClick(View v) {
+            if (id == LOGINID) {
+                Global.localUser = new User();
+                Intent i = new Intent(v.getContext(), NavigationActivity.class);
+                startActivity(i);
+
+            } else if (id == CREATEID) {
+
+            }
+
+        }
+    }
+
 }
