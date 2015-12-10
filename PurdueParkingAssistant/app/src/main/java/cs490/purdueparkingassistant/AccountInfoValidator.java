@@ -22,7 +22,7 @@ public class AccountInfoValidator {
     }
 
     public boolean validateUsername(String username) {
-        if (username.length() < 8 || username.length() > 20) {
+        if (username.length() < 4 || username.length() > 20) {
             Log.d("Validator","Username length incorrect");
             return false;
         }
@@ -39,12 +39,12 @@ public class AccountInfoValidator {
 
     public boolean validatePhoneNumber(String number) {
         Log.d("VALIDATOR", number);
-        number = number.replace("(", "");
-        number = number.replace(")", "");
-        number = number.replace("-", "");
-        number = number.replace(" ", "");
+        //number = number.replace("(", "");
+        //number = number.replace(")", "");
+        //number = number.replace("-", "");
+        //number = number.replace(" ", "");
         Log.d("VALIDATOR", number);
-        if (number.length() != 10) {
+        if (number.length() != 12) {
             Log.d("Validator", "Number length wrong");
             return false;
         }

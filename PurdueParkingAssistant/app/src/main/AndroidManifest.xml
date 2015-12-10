@@ -4,46 +4,11 @@
 
     <uses-permission android:name="android.permission.INTERNET" />
 
-    <user-permission android:name="android.permission.WAKE_LOCK" />
-    <user-permission android:name="com.google.android.c2dm.permission.RECEIVE" />
-
-    <permission
-        android:name="cs490.purdueparkingassistant.gcm.permission.C2D_MESSAGE"
-        android:protectionLevel="signature" />
-
-    <uses-permission android:name="cs490.purdueparkingassistant.gcm.permission.C2D_MESSAGE" />
-
     <application
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:theme="@style/AppTheme" >
-        <receiver
-            android:name="com.google.android.gms.gcm.GcmReceiver"
-            android:exported="true"
-            android:permission="com.google.android.c2dm.permission.SEND" >
-            <intent-filter>
-                <action android:name="com.google.android.c2dm.intent.RECEIVE" />
-
-                <category android:name="com.example.gcm" />
-            </intent-filter>
-        </receiver>
-
-        <service
-            android:name="PushNotifications.MyGcmListenerService"
-            android:exported="false" >
-            <intent-filter>
-                <action android:name="com.google.android.c2dm.intent.RECEIVE" />
-            </intent-filter>
-        </service>
-        <service
-            android:name=".PushNotifications.MyInstanceIDListenerService"
-            android:exported="false" >
-            <intent-filter>
-                <action android:name="com.google.android.gms.iid.InstanceID" />
-            </intent-filter>
-        </service>
-
         <activity
             android:name=".LoginActivity"
             android:label="@string/app_name" >
@@ -65,11 +30,15 @@
             android:name=".AddVehicle"
             android:label="@string/title_activity_add_vehicle" >
         </activity>
-
-        <service
-            android:name=".PushNotifications.RegistrationIntentService"
-            android:exported="false" >
-        </service>
+        <activity android:name=".MessageDetailActivity" >
+        </activity>
+        <activity android:name=".AddMessageActivity" >
+        </activity>
+        <activity
+            android:name=".CreateAccountActivity"
+            android:label="@string/title_activity_create_account"
+            android:theme="@style/AppTheme.NoActionBar" >
+        </activity>
     </application>
 
 </manifest>

@@ -1,10 +1,76 @@
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="cs490.purdueparkingassistant.MainPageFragment">
+    tools:context="cs490.purdueparkingassistant.MainPageFragment"
+    android:background="#7CA6C0">
 
     <!-- TODO: Update blank fragment layout -->
-    <TextView android:layout_width="match_parent" android:layout_height="match_parent"
-        android:text="Does this exist?" />
 
-</FrameLayout>
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/buttonLayout"
+        android:weightSum="4">
+
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="2dp"
+            android:text="By Score"
+            android:id="@+id/sortByScore"
+            android:layout_weight="1"
+            android:textColor="#ffffff"
+            android:background="#4a6373" />
+
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="2dp"
+            android:layout_weight="1"
+            android:text="By Time"
+            android:id="@+id/sortByTime"
+            android:textColor="#ffffff"
+            android:background="#4a6373" />
+
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="2dp"
+            android:id="@+id/loadMessages"
+            android:layout_weight="1"
+            android:text="Load More"
+            android:textColor="#ffffff"
+            android:background="#4a6373" />
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="2dp"
+            android:text="My Posts"
+            android:layout_weight="1"
+            android:id="@+id/myPosts"
+            android:textColor="#ffffff"
+            android:background="#4a6373"
+            />
+    </LinearLayout>
+
+    <ListView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/messageListView"
+        android:layout_below="@id/buttonLayout"
+        android:layout_gravity="center_horizontal|top"
+        android:choiceMode="none"
+        android:divider="#4a6373"
+        android:dividerHeight="7dp"/>
+
+    <Button
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:id="@+id/postMessage"
+        android:text="Post A Message"
+        android:background="#4a6373"
+        android:textColor="#ffffff"
+        />
+</RelativeLayout>

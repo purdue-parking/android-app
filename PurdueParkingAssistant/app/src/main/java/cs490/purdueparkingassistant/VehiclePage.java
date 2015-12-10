@@ -3,12 +3,16 @@ package cs490.purdueparkingassistant;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.util.Log;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -18,8 +22,21 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import com.loopj.android.http.JsonHttpResponseHandler;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.util.ArrayList;
 import java.util.List;
+
+import cs490.purdueparkingassistant.APIClasses.ListViewUpdateReceiver;
+import cs490.purdueparkingassistant.APIClasses.ParkingRestClient;
+import cs490.purdueparkingassistant.APIClasses.ParkingRestClientUsage;
+import cz.msebera.android.httpclient.Header;
 
 
 /**
@@ -37,6 +54,9 @@ public class VehiclePage extends Fragment {
     private OnFragmentInteractionListener mListener;
     private View fragmentView;
     private ListView lv;
+    private ListViewUpdateReceiver updateReceiver;
+    private VehicleArrayAdapter vaa;
+    private ProgressDialog dialog;
 
     /**
      * Use this factory method to create a new instance of
@@ -66,17 +86,33 @@ public class VehiclePage extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+        System.out.println("Creating View");
         // Inflate the layout for this fragment
+        vaa = new VehicleArrayAdapter(getActivity(), Global.localUser.getCars());
         fragmentView = inflater.inflate(R.layout.fragment_vehicle_page, container, false);
         lv = (ListView) fragmentView.findViewById(R.id.vehicleList);
-        lv.setAdapter(new VehicleArrayAdapter(getActivity(), Global.localUser.getCars()));
+        lv.setAdapter(vaa);
         lv.setOnItemClickListener(new VehicleClickListener(Global.localUser.getCars()));
         Button addVehicle = (Button) fragmentView.findViewById(R.id.addVehicle);
         addVehicle.setOnClickListener(new VehicleButtonListener(ADD_VEHICLE));
         Button deleteVehicle = (Button) fragmentView.findViewById(R.id.deleteVehicle);
         deleteVehicle.setOnClickListener(new VehicleButtonListener(DELETE_VEHICLE));
+
+        IntentFilter filter = new IntentFilter(ListViewUpdateReceiver.NEW_UPDATE_BROADCAST);
+        filter.addCategory(Intent.CATEGORY_DEFAULT);
+        updateReceiver = new ListViewUpdateReceiver(lv);
+        getContext().registerReceiver(updateReceiver, filter);
+
+        //ParkingRestClientUsage client = new ParkingRestClientUsage(getContext());
+        try {
+            getVehicles(Global.localUser.getUsername());
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
         return fragmentView;
     }
+
 
     // TODO: Rename method, update argument and hook method into UI event
     public void onButtonPressed(Uri uri) {
@@ -101,7 +137,17 @@ public class VehiclePage extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
-        lv.invalidateViews();
+        //lv.invalidateViews();
+        Log.d("RESUME ", "ACTIVITY RESUMED");
+        VehicleArrayAdapter adapter = new VehicleArrayAdapter(getContext(), Global.localUser.getCars());
+        lv.setAdapter(adapter);
+        /*
+        try {
+            getVehicles(Global.localUser.getUsername());
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        */
     }
 
 
@@ -109,6 +155,10 @@ public class VehiclePage extends Fragment {
     public void onDetach() {
         super.onDetach();
         mListener = null;
+        if (updateReceiver != null){
+            getContext().unregisterReceiver(updateReceiver);
+            updateReceiver = null;
+        }
     }
 
     /**
@@ -139,9 +189,12 @@ public class VehiclePage extends Fragment {
             if (id == ADD_VEHICLE) {
                 Intent i = new Intent(getContext(), AddVehicle.class);
                 startActivity(i);
+                System.out.println("NUMBER OF VEHICLES : " + Global.localUser.getCars().size());
+                //lv.invalidateViews();
+                //lv.refreshDrawableState();
+
 
             } else if (id == DELETE_VEHICLE) {
-
             }
 
         }
@@ -160,7 +213,18 @@ public class VehiclePage extends Fragment {
             adb.setTitle("Remove Vehicle?");
             adb.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
                 public void onClick(DialogInterface dialog, int which) {
-                    Global.localUser.getCars().remove(objects.get(position));
+                    ParkingRestClientUsage client = new ParkingRestClientUsage(getContext());
+                    try {
+                        Car car = Global.localUser.getCars().get(position);
+                        System.out.println(car.getMake() + car.getModel());
+                        System.out.println(car.getId());
+                        client.deleteVehicle(Global.localUser.getCars().get(position).getId());
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+
+                    //Global.localUser.getCars().remove(objects.get(position));
+                    Global.localUser.getCars().remove(position);
                     lv.invalidateViews();
                 }
             });
@@ -181,11 +245,13 @@ public class VehiclePage extends Fragment {
         public VehicleArrayAdapter(Context context, List<Car> objects) {
             super(context, -1, objects);
             this.objects = objects;
+
         }
 
 
         @Override
         public View getView(int position, View convertView, ViewGroup parent) {
+            Log.d("ListView", "Printing----------------------------------------");
             View v = convertView;
 
             if (v == null) {
@@ -212,5 +278,69 @@ public class VehiclePage extends Fragment {
             return v;
         }
 
+    }
+
+    public void getVehicles(String username) throws JSONException {
+        System.out.println(username);
+        dialog = new ProgressDialog(getContext());
+        dialog.setMessage("Loading Messages... Please wait...");
+        dialog.show();
+        ParkingRestClient.get("vehiclecollection/" + username, null, new JsonHttpResponseHandler() {
+            @Override
+            public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
+                System.out.println("Object " + statusCode);
+                System.out.println("-----------------------------------");
+                System.out.println(response);
+                dialog.dismiss();
+
+                try {
+                    extractCars(response);
+                    VehicleArrayAdapter adapter = new VehicleArrayAdapter(getContext(), Global.localUser.getCars());
+                    lv.setAdapter(adapter);
+                    //Global.localUser.setCars(cars);
+                } catch (JSONException e) {
+                    dialog.dismiss();
+                    e.printStackTrace();
+                }
+            }
+
+            @Override
+            public void onSuccess(int statusCode, Header[] headers, JSONArray response) {
+                dialog.dismiss();
+                System.out.println("Array " + statusCode);
+                System.out.println("-----------------------------------");
+                System.out.println(response);
+            }
+
+            @Override
+            public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse) {
+                dialog.dismiss();
+                System.out.println(errorResponse);
+                Toast toast = Toast.makeText(getContext(), "Error connecting to Server", Toast.LENGTH_LONG);
+                toast.setGravity(Gravity.TOP, 25, 400);
+                toast.show();
+            }
+        });
+    }
+
+    public void extractCars(JSONObject response) throws JSONException {
+
+        JSONArray items = response.getJSONArray("items");
+        ArrayList<Car> cars = new ArrayList<>();
+        for (int i = 0; i < items.length(); i++) {
+            //System.out.println(items.get(i).toString());
+            JSONObject carJSON = items.getJSONObject(i);
+            System.out.println(carJSON);
+            int id = Integer.parseInt(carJSON.getString("carID"));
+            String model = carJSON.getString("model");
+            String color = carJSON.getString("color");
+            String plateNumber = carJSON.getString("plateNumber");
+            String year = carJSON.getString("year");
+            String make = carJSON.getString("make");
+            String plateState = carJSON.getString("plateState");
+            Car tempCar = new Car(id, plateNumber, plateState, make, model, year, color);
+            cars.add(tempCar);
+        }
+        Global.localUser.setCars(cars);
     }
 }

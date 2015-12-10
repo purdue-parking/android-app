@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#7CA6C0">
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="10dp"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:text="Post A Message"
+        android:id="@+id/textView9"
+        android:layout_gravity="center_horizontal"
+        android:textColor="#ffffff"
+        android:textSize="28dp" />
+
+    <CheckBox
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="5dp"
+        android:text="Request Assistance"
+        android:id="@+id/helpNeededCheck"
+        android:checked="false"
+        android:textColor="#ffffff"
+        android:textSize="22dp" />
+
+    <EditText
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="5dp"
+        android:inputType="textMultiLine"
+        android:ems="10"
+        android:id="@+id/messageEditText"
+        android:textColor="#ffffff"
+        android:hint="Enter Message"
+        android:textColorHint="#ffffff"
+        android:textIsSelectable="false"
+        android:textSize="22dp" />
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Post"
+        android:id="@+id/completeMessage"
+        android:layout_gravity="center_horizontal"
+        android:textColor="#ffffff"
+        android:background="#4A6373"
+        android:textSize="22dp" />
+
+</LinearLayout>

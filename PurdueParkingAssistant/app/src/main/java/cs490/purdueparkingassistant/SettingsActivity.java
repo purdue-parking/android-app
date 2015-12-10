@@ -14,6 +14,10 @@ import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import org.json.JSONException;
+
+import cs490.purdueparkingassistant.APIClasses.ParkingRestClientUsage;
+
 public class SettingsActivity extends AppCompatActivity implements View.OnClickListener {
 
     AccountInfoValidator validator;
@@ -57,6 +61,12 @@ public class SettingsActivity extends AppCompatActivity implements View.OnClickL
             u.setPhoneNumber(phoneNumberField.getText().toString());
             u.setUsername(usernameField.getText().toString());
             Toast.makeText(v.getContext(), "Information Saved", Toast.LENGTH_LONG).show();
+            ParkingRestClientUsage client = new ParkingRestClientUsage(v.getContext());
+            try {
+                client.editAccount();
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
         }
     }
 

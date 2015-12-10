@@ -101,7 +101,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="10dp"
         android:textAppearance="?android:attr/textAppearanceLarge"
-        android:text="Receive Email Notifications"
+        android:text="Receive Help Notifications"
         android:id="@+id/emailCheckBox"
         android:checked="false"
         android:textColor="#ffffff"
@@ -146,5 +146,17 @@
         android:layout_alignEnd="@+id/emailCheckBox"
         android:background="#4A6373"
         android:textColor="#ffffff" />
+
+    <CheckBox
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Receive Comment Notifications"
+        android:id="@+id/commentCheckbox"
+        android:layout_below="@+id/emailCheckBox"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:checked="false"
+        android:textColor="#ffffff"
+        android:textAppearance="@style/Base.TextAppearance.AppCompat.Large" />
 
 </RelativeLayout>

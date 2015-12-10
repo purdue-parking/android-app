@@ -8,13 +8,27 @@ import java.util.Date;
 public class Ticket {
 
     private String id;
-    private Date dateReceived;
+    private String plateNumber;
+    private String plateState;
+    private String time;
+    private String date;
+    private String reason;
+    private String towAddress;
     private double amount;
 
-    public Ticket(String id, Date dateReceived, double amount) {
+    public Ticket(String id, double amount) {
         this.id = id;
-        this.dateReceived = dateReceived;
         this.amount = amount;
+    }
+
+    public Ticket(String id, String plateNumber, String plateState, String time, String date, String reason, String towAddress) {
+        this.id = id;
+        this.plateNumber = plateNumber;
+        this.plateState = plateState;
+        this.time = time;
+        this.date = date;
+        this.reason = reason;
+        this.towAddress = towAddress;
     }
 
     public String getId() {
@@ -25,14 +39,6 @@ public class Ticket {
         this.id = id;
     }
 
-    public Date getDateReceived() {
-        return dateReceived;
-    }
-
-    public void setDateReceived(Date dateReceived) {
-        this.dateReceived = dateReceived;
-    }
-
     public double getAmount() {
         return amount;
     }
@@ -41,4 +47,51 @@ public class Ticket {
         this.amount = amount;
     }
 
+    public String getPlateNumber() {
+        return plateNumber;
+    }
+
+    public void setPlateNumber(String plateNumber) {
+        this.plateNumber = plateNumber;
+    }
+
+    public String getPlateState() {
+        return plateState;
+    }
+
+    public void setPlateState(String plateState) {
+        this.plateState = plateState;
+    }
+
+    public String getTime() {
+        return time;
+    }
+
+    public void setTime(String time) {
+        this.time = time;
+    }
+
+    public String getDate() {
+        return date;
+    }
+
+    public void setDate(String date) {
+        this.date = date;
+    }
+
+    public String getReason() {
+        return reason;
+    }
+
+    public void setReason(String reason) {
+        this.reason = reason;
+    }
+
+    public String getTowAddress() {
+        return towAddress;
+    }
+
+    public void setTowAddress(String towAddress) {
+        this.towAddress = towAddress;
+    }
 }

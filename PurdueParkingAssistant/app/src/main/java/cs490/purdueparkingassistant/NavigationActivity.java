@@ -35,9 +35,9 @@ public class NavigationActivity extends AppCompatActivity {
 
         }
 
-        mTitle = "Main Page";
+        mTitle = "Front Page";
 
-        mPlanetTitles = new String[]{"Front Page","Tickets", "Vehicles"};
+        mPlanetTitles = new String[]{"Front Page","Tickets", "Vehicles", "Parking Map"};
         mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
         mDrawerList = (ListView) findViewById(R.id.left_drawer);
 
@@ -125,18 +125,44 @@ public class NavigationActivity extends AppCompatActivity {
             selectItem(position);
             String page = mPlanetTitles[position];
             if (page.equals("Tickets")) {
-                Fragment fragment = new TicketPage();
+                Fragment fragment = TicketPage.newInstance();
                 FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
-                ft.add(R.id.content_frame, fragment).commit();
+                ft.replace(R.id.content_frame, fragment);
+                ft.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
+                //ft.addToBackStack(null);
+                ft.commit();
+                //ft.add(R.id.content_frame, fragment).commit();
             } else if (page.equals("Front Page")) {
-                Fragment fragment = new MainPageFragment();
+                Fragment fragment = MainPageFragment.newInstance();
                 FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
-                ft.add(R.id.content_frame, fragment).commit();
+                ft.replace(R.id.content_frame, fragment);
+                ft.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
+                //ft.addToBackStack(null);
+                ft.commit();
+                //ft.add(R.id.content_frame, fragment).commit();
             } else if (page.equals("Vehicles")) {
-                Fragment fragment = new VehiclePage();
+                Fragment fragment = VehiclePage.newInstance();
                 FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
-                ft.add(R.id.content_frame, fragment).commit();
+                ft.replace(R.id.content_frame, fragment);
+                ft.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
+                //ft.addToBackStack(null);
+                ft.commit();
+                //ft.add(R.id.content_frame, fragment).commit();
+            } else if (page.equals("Parking Map")) {
+                Fragment fragment = MapPage.newInstance();
+                FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+                ft.replace(R.id.content_frame, fragment);
+                ft.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
+                //ft.addToBackStack(null);
+                ft.commit();
+                //ft.add(R.id.content_frame, fragment).commit();
             }
+        }
+
+        public void mRemoveFragment(Fragment fragment){
+            FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+            ft.remove(fragment);
+            ft.commit();
         }
     }
 }

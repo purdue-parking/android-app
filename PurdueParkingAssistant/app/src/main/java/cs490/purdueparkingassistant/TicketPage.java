@@ -2,12 +2,16 @@ package cs490.purdueparkingassistant;
 
 import android.app.Activity;
 import android.app.Dialog;
+import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.Intent;
+import android.content.IntentFilter;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.text.method.LinkMovementMethod;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,10 +20,21 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
+
+import com.loopj.android.http.JsonHttpResponseHandler;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
+
+import cs490.purdueparkingassistant.APIClasses.ListViewUpdateReceiver;
+import cs490.purdueparkingassistant.APIClasses.ParkingRestClient;
+import cs490.purdueparkingassistant.APIClasses.ParkingRestClientUsage;
+import cz.msebera.android.httpclient.Header;
 
 
 /**
@@ -36,6 +51,10 @@ public class TicketPage extends Fragment {
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
     private View fragmentView;
+    private TicketArrayAdapter ticketAdapter;
+    private ListViewUpdateReceiver updateReceiver;
+    private ListView ticketList;
+    private ProgressDialog dialog;
 
     // TODO: Rename and change types of parameters
 
@@ -73,13 +92,28 @@ public class TicketPage extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         fragmentView = inflater.inflate(R.layout.fragment_vehicle_info_page, container, false);
-        ListView ticketList = (ListView) fragmentView.findViewById(R.id.ticketList);
+        ticketList = (ListView) fragmentView.findViewById(R.id.ticketList);
         List<Ticket> ticks = new ArrayList<Ticket>();
         for (int i = 0; i < 4; i++) {
-            ticks.add(new Ticket("039458294502",new Date(), 20));
+            ticks.add(new Ticket("039458294502", 20));
         }
-        ticketList.setAdapter(new TicketArrayAdapter(getActivity(), ticks));
-        ticketList.setOnItemClickListener(new TicketClickListener(ticks));
+        ticketAdapter = new TicketArrayAdapter(getActivity(), Global.tickets);
+        ticketList.setAdapter(ticketAdapter);
+        ticketList.setOnItemClickListener(new TicketClickListener(Global.tickets));
+
+        IntentFilter filter = new IntentFilter(ListViewUpdateReceiver.NEW_UPDATE_BROADCAST);
+        filter.addCategory(Intent.CATEGORY_DEFAULT);
+        updateReceiver = new ListViewUpdateReceiver(ticketList);
+        getContext().registerReceiver(updateReceiver, filter);
+
+
+        //ParkingRestClientUsage client = new ParkingRestClientUsage(getContext());
+        try {
+            getTickets();
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
         return fragmentView;
     }
 
@@ -107,6 +141,16 @@ public class TicketPage extends Fragment {
     public void onDetach() {
         super.onDetach();
         mListener = null;
+        if (updateReceiver != null){
+            getContext().unregisterReceiver(updateReceiver);
+            updateReceiver = null;
+        }
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        ticketList.invalidateViews();
     }
 
     /**
@@ -143,9 +187,9 @@ public class TicketPage extends Fragment {
             TextView idView = (TextView) dialog.findViewById(R.id.popupId);
             idView.setText(t.getId());
             TextView dateView = (TextView) dialog.findViewById(R.id.popupDate);
-            dateView.setText("" + t.getDateReceived());
-            TextView costView = (TextView) dialog.findViewById(R.id.popupCost);
-            costView.setText("$"+t.getAmount());
+            dateView.setText("" + t.getDate() +  " " + t.getTime());
+            TextView costView = (TextView) dialog.findViewById(R.id.popupReason);
+            costView.setText(t.getReason());
             TextView link = (TextView) dialog.findViewById(R.id.popupLink);
             link.setMovementMethod(LinkMovementMethod.getInstance());
             dialog.show();
@@ -174,14 +218,72 @@ public class TicketPage extends Fragment {
             Ticket t = objects.get(position);
             TextView title = (TextView) v.findViewById(R.id.ticketId);
             TextView date = (TextView) v.findViewById(R.id.dateView);
-            TextView cost = (TextView) v.findViewById(R.id.costView);
+            TextView plate = (TextView) v.findViewById(R.id.plateView);
+            TextView reason = (TextView) v.findViewById(R.id.reasonField);
 
             title.setText(t.getId());
-            date.setText(t.getDateReceived().toString());
-            cost.setText("$"+t.getAmount());
+            date.setText(t.getDate() +  " " + t.getTime());
+            plate.setText(t.getPlateNumber());
+            reason.setText(t.getReason());
 
             return v;
         }
+    }
+
+    public void getTickets() throws JSONException {
+        dialog = new ProgressDialog(getContext());
+        dialog.setMessage("Loading Messages... Please wait...");
+        dialog.show();
+        ParkingRestClient.get("ticketcollection/" + Global.localUser.getUsername(), null, new JsonHttpResponseHandler() {
+            @Override
+            public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
+                dialog.dismiss();
+                System.out.println("Object " + statusCode);
+                System.out.println("-----------------------------------");
+                System.out.println(response);
+                try {
+                    extractTickets(response);
+                    TicketArrayAdapter adapter = new TicketArrayAdapter(getContext(), Global.tickets);
+                    ticketList.setAdapter(adapter);
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+
+            }
+
+            @Override
+            public void onSuccess(int statusCode, Header[] headers, JSONArray response) {
+                System.out.println("Array " + statusCode);
+                System.out.println("-----------------------------------");
+                System.out.println(response);
+            }
+
+            @Override
+            public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse) {
+                dialog.dismiss();
+                System.out.println(errorResponse);
+                Toast toast = Toast.makeText(getContext(), "Error connecting to Server", Toast.LENGTH_LONG);
+                toast.setGravity(Gravity.TOP, 25, 400);
+                toast.show();
+            }
+        });
+    }
+
+    public void extractTickets(JSONObject response) throws JSONException {
+        JSONArray items = response.getJSONArray("items");
+        ArrayList<Ticket> tickets = new ArrayList<>();
+        for (int i = 0; i < items.length(); i++) {
+            JSONObject ticket = items.getJSONObject(i);
+            String ticketNumber = ticket.getString("ticketNumber");
+            String plateNumber = ticket.getString("plateNumber");
+            String plateState = ticket.getString("plateState");
+            String time = ticket.getString("time");
+            String date = ticket.getString("date");
+            String reason = ticket.getString("reason");
+            Ticket t = new Ticket(ticketNumber,plateNumber,plateState,time,date,reason, "");
+            tickets.add(t);
+        }
+        Global.tickets = tickets;
     }
 
 }

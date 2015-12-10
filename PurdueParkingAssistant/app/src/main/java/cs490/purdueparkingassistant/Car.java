@@ -11,6 +11,7 @@ public class Car {
     private String model;
     private String year;
     private String color;
+    private int id;
 
 
 
@@ -22,6 +23,20 @@ public class Car {
         year = yr;
         color = co;
     }
+
+    public Car(int id, String l, String ls, String m, String mo, String yr, String co) {
+        this.id = id;
+        licensePlateNumber = l;
+        licensePlateState = ls;
+        make = m;
+        model = mo;
+        year = yr;
+        color = co;
+    }
+
+    public int getId() { return id; }
+
+    public void setId(int id) { this.id = id; }
 
     public String getLicensePlateNumber() {
         return licensePlateNumber;

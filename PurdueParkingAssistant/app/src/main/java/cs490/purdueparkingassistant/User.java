@@ -10,6 +10,7 @@ public class User {
 
     //Basic User Information
     private String email;
+    private String name;
     private String phoneNumber;
     private String username;
     private String password;
@@ -17,6 +18,7 @@ public class User {
     //App Preferences
     public Boolean receiveTicketPushNotifications = true;
     public Boolean receiveEmailNotifications = true;
+    public Boolean receiveHelpNotifications = true;
 
     //Vehicles
     private ArrayList<Car> cars;
@@ -24,17 +26,19 @@ public class User {
     //Generic User for debugging/testing purposes
     public User() {
         email = "email@website.com";
-        phoneNumber = "0000000000";
+        phoneNumber = "000-000-0000";
         username = "anonymous";
         password = "password";
         cars = new ArrayList<Car>();
     }
 
-    public User(String email, String phoneNumber, String username, String password) {
+    public User(String name, String email, String phoneNumber, String username, String password) {
+        this.name = name;
         this.email = email;
         this.phoneNumber = phoneNumber;
         this.username = username;
         this.password = password;
+        cars = new ArrayList<Car>();
     }
 
     public ArrayList<Car> getCars() { return cars;}
@@ -75,4 +79,11 @@ public class User {
         this.password = password;
     }
 
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
 }
