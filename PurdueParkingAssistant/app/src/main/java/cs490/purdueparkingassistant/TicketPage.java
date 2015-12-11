@@ -182,7 +182,8 @@ public class TicketPage extends Fragment {
             final Dialog dialog = new Dialog(getActivity());
             dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
             dialog.setContentView(R.layout.ticket_popup);
-            Ticket t = objects.get(position);
+            //Ticket t = objects.get(position);
+            Ticket t = Global.tickets.get(position);
 
             TextView idView = (TextView) dialog.findViewById(R.id.popupId);
             idView.setText(t.getId());

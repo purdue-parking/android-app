@@ -315,8 +315,13 @@ public class ParkingRestClientUsage {
         //params.put("alt", "json");
         params.put("username", Global.localUser.getUsername());
         params.put("name", Global.localUser.getName());
+        params.put("password", Global.localUser.getPassword());
         params.put("email", Global.localUser.getEmail());
         params.put("phoneNumber", Global.localUser.getPhoneNumber());
+        params.put("accountType", "CITIZEN");
+        params.put("ticketEmail", Global.localUser.receiveTicketPushNotifications);
+        params.put("helpEmail", Global.localUser.receiveHelpNotifications);
+        params.put("responseEmail", Global.localUser.receiveEmailNotifications);
         StringEntity entity = new StringEntity(params.toString(), ContentType.APPLICATION_JSON);
         ParkingRestClient client = new ParkingRestClient();
         client.post(c, "editAccount", entity, new JsonHttpResponseHandler() {

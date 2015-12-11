@@ -13,10 +13,8 @@
     <string name="navigation_drawer_close">Close navigation drawer</string>
 
     <string name="action_example">Example action</string>
-    <string name="title_activity_test">Test</string>
+    <string name="title_activity_test">Purdue Parking Assistant</string>
     <string name="title_activity_navigation">NavigationActivity</string>
-    <string name="title_activity_fuck_u">FuckU</string>
-    <string name="title_activity_some_fucking_thing">SomeFuckingThing</string>
     <string name="title_activity_nav">NavActivity</string>
     <string name="title_activity_main_navigation">MainNavigation</string>
 

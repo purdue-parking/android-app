@@ -22,6 +22,7 @@ public class SettingsActivity extends AppCompatActivity implements View.OnClickL
 
     AccountInfoValidator validator;
     EditText emailField, usernameField, passwordField, phoneNumberField;
+    CheckBox ticketBox, helpBox, commentBox;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -48,6 +49,14 @@ public class SettingsActivity extends AppCompatActivity implements View.OnClickL
         usernameField.setText(Global.localUser.getUsername());
         passwordField.setText(Global.localUser.getPassword());
 
+        ticketBox = (CheckBox) findViewById(R.id.pushCheckBox);
+        helpBox = (CheckBox) findViewById(R.id.emailCheckBox);
+        commentBox = (CheckBox) findViewById(R.id.commentCheckbox);
+
+        ticketBox.setChecked(Global.localUser.receiveTicketPushNotifications);
+        helpBox.setChecked(Global.localUser.receiveHelpNotifications);
+        commentBox.setChecked(Global.localUser.receiveEmailNotifications);
+
     }
 
     public void onClick(View v) {
@@ -60,6 +69,9 @@ public class SettingsActivity extends AppCompatActivity implements View.OnClickL
             u.setPassword(passwordField.getText().toString());
             u.setPhoneNumber(phoneNumberField.getText().toString());
             u.setUsername(usernameField.getText().toString());
+            u.receiveHelpNotifications = helpBox.isChecked();
+            u.receiveTicketPushNotifications = ticketBox.isChecked();
+            u.receiveEmailNotifications = commentBox.isChecked();
             Toast.makeText(v.getContext(), "Information Saved", Toast.LENGTH_LONG).show();
             ParkingRestClientUsage client = new ParkingRestClientUsage(v.getContext());
             try {

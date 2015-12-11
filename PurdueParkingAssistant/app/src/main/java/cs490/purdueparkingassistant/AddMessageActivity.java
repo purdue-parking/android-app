@@ -53,10 +53,11 @@ public class AddMessageActivity extends AppCompatActivity {
         //params.put("resolved", m.isResolved());
         StringEntity entity = new StringEntity(params.toString(), ContentType.APPLICATION_JSON);
 
-        ParkingRestClient.post(this, "addMessage?", entity, new JsonHttpResponseHandler() {
+        ParkingRestClient.post(this, "addMessage", entity, new JsonHttpResponseHandler() {
 
             @Override
             public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
+                Log.d("Add Message COmplete", response.toString());
                 finish();
             }
 

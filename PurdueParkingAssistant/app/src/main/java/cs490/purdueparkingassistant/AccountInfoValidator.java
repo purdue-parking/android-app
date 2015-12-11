@@ -30,7 +30,7 @@ public class AccountInfoValidator {
     }
 
     public boolean validatePassword(String password) {
-        if (password.length() < 8 || password.length() > 20) {
+        if (password.length() < 3 || password.length() > 20) {
             Log.d("Validator","Password length incorrect");
             return false;
         }

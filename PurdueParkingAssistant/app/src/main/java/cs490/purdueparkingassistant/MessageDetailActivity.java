@@ -63,6 +63,7 @@ public class MessageDetailActivity extends AppCompatActivity {
         resolve = (Button) findViewById(R.id.resolve);
 
 
+
         Bundle b = getIntent().getExtras();
         id = b.getInt("id");
         String message = b.getString("message", "Error");
@@ -79,7 +80,7 @@ public class MessageDetailActivity extends AppCompatActivity {
             resolve.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-
+                    resolve();
                 }
             });
         }
@@ -210,6 +211,29 @@ public class MessageDetailActivity extends AppCompatActivity {
         }
 
     }
+
+
+    public void resolve() {
+        Log.d("RESOLVE", "ATTEMPTING TO RESOLVE " + id);
+        //post /1/resolveMessage/MESSAGE_ID
+
+        ParkingRestClient.post(this, "resolveMessage/" + id, null, new JsonHttpResponseHandler() {
+            @Override
+            public void onSuccess(int statusCode, Header headers[], JSONObject response) {
+                Log.d("RESOLVE", response.toString());
+                Toast.makeText(getBaseContext(), "Resolved", Toast.LENGTH_LONG).show();
+                resolve.setClickable(false);
+            }
+
+            @Override
+            public void onFailure(int statusCode, Header[] headers, String s, Throwable throwable) {
+                Log.d("RESOLVE ERROR", s);
+                Toast.makeText(getBaseContext(), "Error Resolving Problem", Toast.LENGTH_LONG).show();
+            }
+
+        });
+    }
+
 
     public void addComment(MessageComment m) throws JSONException {
 

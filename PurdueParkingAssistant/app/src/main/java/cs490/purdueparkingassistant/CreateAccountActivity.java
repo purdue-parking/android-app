@@ -66,7 +66,8 @@ public class CreateAccountActivity extends AppCompatActivity {
         params.put("name", fullNameField.getText().toString());
         params.put("email", emailField.getText().toString());
         params.put("phoneNumber", phoneField.getText().toString());
-        params.put("acctType", "CITIZEN");
+        params.put("password", passwordField.getText().toString());
+        params.put("accountType", "CITIZEN");
         params.put("ticketEmail", true);
         params.put("helpEmail", true);
         params.put("responseEmail", true);
@@ -77,14 +78,21 @@ public class CreateAccountActivity extends AppCompatActivity {
         ParkingRestClient.post(this, "addAccount?", entity, new JsonHttpResponseHandler() {
             @Override
             public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
-                String u = usernameField.getText().toString();
-                String n = fullNameField.getText().toString();
-                String e = emailField.getText().toString();
-                String p = phoneField.getText().toString();
-                String pass = passwordField.getText().toString();
-                Global.localUser = new User(n,e,p,u,pass);
-                Intent i = new Intent(getApplicationContext(), NavigationActivity.class);
-                startActivity(i);
+                Log.d("CREATE ACCOUNT", "SUCCESS");
+                Log.d("CREATE ACCOUNT", response.toString());
+                try {
+                    JSONObject r = response.getJSONObject("error");
+                } catch (JSONException e) {
+                    String u = usernameField.getText().toString();
+                    String n = fullNameField.getText().toString();
+                    String em = emailField.getText().toString();
+                    String p = phoneField.getText().toString();
+                    String pass = passwordField.getText().toString();
+                    Global.localUser = new User(n,em,p,u,pass);
+                    Intent i = new Intent(getApplicationContext(), NavigationActivity.class);
+                    startActivity(i);
+                }
+
 
             }
 

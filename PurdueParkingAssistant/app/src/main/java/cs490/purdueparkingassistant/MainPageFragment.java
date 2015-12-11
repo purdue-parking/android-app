@@ -2,8 +2,10 @@ package cs490.purdueparkingassistant;
 
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.graphics.drawable.GradientDrawable;
@@ -167,6 +169,7 @@ public class MainPageFragment extends Fragment {
         try {
             nextPage++;
             loadMessages(1);
+
         } catch (JSONException e) {
             e.printStackTrace();
         }
@@ -355,6 +358,7 @@ public class MainPageFragment extends Fragment {
                     }
                     MessageArrayAdapter adapter = new MessageArrayAdapter(getContext(), Global.messageBoardContent);
                     messagesView.setAdapter(adapter);
+                    getTickets();
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
@@ -543,6 +547,44 @@ public class MainPageFragment extends Fragment {
         }
         System.out.println(Global.messageBoardContent.size());
 
+    }
+
+    public void getTickets() throws JSONException {
+        ParkingRestClient.get("ticketcollection/" + Global.localUser.getUsername(), null, new JsonHttpResponseHandler() {
+            @Override
+            public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
+
+                System.out.println("Object " + statusCode);
+                System.out.println("-----------------------------------");
+                System.out.println(response);
+                try {
+                    response.getJSONArray("items");
+                    Toast.makeText(getContext(), "You have tickets!", Toast.LENGTH_LONG).show();
+                    //extractTickets(response);
+                    //TicketArrayAdapter adapter = new TicketArrayAdapter(getContext(), Global.tickets);
+                    //ticketList.setAdapter(adapter);
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+
+            }
+
+            @Override
+            public void onSuccess(int statusCode, Header[] headers, JSONArray response) {
+                System.out.println("Array " + statusCode);
+                System.out.println("-----------------------------------");
+                System.out.println(response);
+            }
+
+            @Override
+            public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse) {
+
+                System.out.println(errorResponse);
+                Toast toast = Toast.makeText(getContext(), "Error connecting to Server", Toast.LENGTH_LONG);
+                toast.setGravity(Gravity.TOP, 25, 400);
+                toast.show();
+            }
+        });
     }
 
 }
